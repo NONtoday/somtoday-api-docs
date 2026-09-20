@@ -1504,20 +1504,51 @@ Fetches info about the school, including your mentor.
 #### Returns
 
 ```json
-{
-    "$type": "leerling.RLeerlingSchoolgegevens",
-    "instellingsnaam": "REDACTED",
-    "vestigingsnaam": "REDACTED",
-    "plaats": "REDACTED",
-    "straat": "REDACTED",
-    "postcode": "REDACTED",
-    "telefoonnummer": "REDACTED",
-    "email": "REDACTED",
-    "leerjaar": 99,
-    "mentoren": [
-        "REDACTED"
-    ]
-}
+[
+    {
+        "leerlingId": 1234,
+        "instellingsnaam": "REDACTED",
+        "huidigeVestiging": {
+            "links": [
+                {
+                    "id": 1234,
+                    "rel": "self",
+                    "type": "instelling.RVestiging",
+                    "href": "https://api.somtoday.nl/rest/v1/vestigingen/1234"
+                }
+            ],
+            "permissions": [
+                {
+                    "full": "instelling.RVestiging:READ:INSTANCE(1234)",
+                    "type": "instelling.RVestiging",
+                    "operations": [
+                        "READ"
+                    ],
+                    "instances": [
+                        "INSTANCE(1234)"
+                    ]
+                }
+            ],
+            "additionalObjects": {},
+            "naam": "REDACTED",
+            "afkorting": "REDACTED",
+            "UUID": "00000000-0000-0000-0000-000000000000",
+            "uuid": "00000000-0000-0000-0000-000000000000"
+        },
+        "plaats": "REDACTED",
+        "straat": "REDACTED",
+        "postcode": "REDACTED",
+        "telefoonnummer": "REDACTED",
+        "email": "info@school.nl",
+        "leerjaar": 5,
+        "stamgroepnaam": "h5c",
+        "mentoren": [
+            "G. REDACTED"
+        ],
+        "loopbaan": "a1b - h2a - h3a - h4b - h5c",
+        "opleidingNaam": "HAVO-EM"
+    }
+]
 ```
 
 </details>
