@@ -29,7 +29,8 @@ In case you have any questions about the docs or want to chat with other, you ca
   - [Fetching information](#fetching-information)
     - [Current student(s): `GET /rest/v1/leerlingen`](#current-students-get-restv1leerlingen)
     - [Student by ID: `GET /rest/v1/leerlingen/[id]`](#student-by-id-get-restv1leerlingenid)
-    - [Schedule: `GET /rest/v1/afspraken`](#schedule-get-restv1afspraken)
+    - [Get message recipients: `GET /rest/v1/medewerkers/ontvangers`](#get-message-recipients-get-restv1medewerkersontvangers)
+    - [Schedule: `GET /rest/v1/afspraakitems/[student-id]/jaar/[year]/week/[week]`](#schedule-get-restv1afspraakitemsstudent-idjaaryearweekweek)
     - [Absence Reports: `GET /rest/v1/absentiemeldingen`](#absence-reports-get-restv1absentiemeldingen)
     - [Study Guides: `GET /rest/v1/studiewijzers`](#study-guides-get-restv1studiewijzers)
     - [Subjects: `GET /rest/v1/vakken`](#subjects-get-restv1vakken)
@@ -40,7 +41,6 @@ In case you have any questions about the docs or want to chat with other, you ca
     - [Messages: `GET /rest/v1/boodschappen/conversaties`](#messages-get-restv1boodschappenconversaties)
     - [Schoolgegevens: `GET /rest/v1/leerlingen/[id]/schoolgegevens`](#schoolgegevens-get-restv1idschoolgegevens)
     - [Vakanties: `GET /rest/v1/vakanties/leerling/[id]`](#vakanties-get-restv1vakantiesleerlingid)
-    - [Studiemateriaal: `GET /rest/v1/vakken/studiemateriaal/[id]` & `GET rest/v1/vakken/studiemateriaal/[id]/vak/[uuid]` & `/rest/v1/studiemateriaal/algemeen/[id]`](#studiemateriaal-get-restv1vakkenstudiemateriaalid--get-restv1vakkenstudiemateriaalidvakuuid--restv1studiemateriaalalgemeenid)
     - [ICalendar: `GET /rest/v1/icalendar`](#icalendar-get-restv1icalendar)
     - [ICalendar: `DELETE /rest/v1/icalendar`](#icalendar-delete-restv1icalendar)
   - [Grades](Grades.md)
@@ -54,7 +54,11 @@ In case you have any questions about the docs or want to chat with other, you ca
     - [3. Homework from weeks: `GET /rest/v1/studiewijzeritemweektoekenningen`](Homework.md#3-homework-from-weeks-get-restv1studiewijzeritemweektoekenningen)<br><br>
     - [1. Homework Made `PUT /rest/v1/swigemaakt/[id]`](Homework.md#1-homework-made-put-restv1swigemaaktid)
     - [2. Homework Made `PUT /rest/v1/swigemaakt/cou`](Homework.md#2-homework-made-put-restv1swigemaaktcou)
-
+  - [Studiemateriaal](Studiemateriaal.md)
+    - [General study materials: `GET /rest/v1/studiemateriaal/algemeen/[student_id]`](Studiemateriaal.md#general-study-materials-get-restv1studiemateriaalalgemeenstudent_id)
+    - [Fetch subjects that have study material: `GET /rest/v1/vakken/studiemateriaal/[student_id]`](Studiemateriaal.md#fetch-subjects-that-have-study-material-get-restv1vakkenstudiemateriaalstudent_id)
+    - [Fetch study material: `GET /rest/v1/studiemateriaal/[student_id]/vak/[stubject_uuid]`](Studiemateriaal.md#fetch-study-material-get-restv1studiemateriaalstudent_idvakstubject_uuid)
+    - [Fetch file from study material folder: `GET /gcs/download/[filename]`](Studiemateriaal.md#fetch-file-from-study-material-folder-get-gcsdownloadfilename)
 
 
 <!-- /TOC -->
@@ -225,13 +229,76 @@ curl "$school_url/rest/v1/leerlingen" -H "Authorization: Bearer $token" -H "Acce
 #### Example
 
 ```bash
-token='<REDACTED>' school_url=https://api.somtoday.nl id=1234
+token='<REDACTED>' id=1234
 curl "$school_url/rest/v1/leerlingen/$id" -H "Authorization: Bearer $token" -H "Accept: application/json"
 ```
 
 </details>
 
-### Schedule: `GET /rest/v1/afspraken`
+### Get message recipients: `GET /rest/v1/medewerkers/ontvangers`
+<details><summary>Click to open</summary>
+
+#### Parameters
+
+| Name          | Type     | Value                    |
+|---------------|----------|--------------------------|
+| Authorization | Header   | Bearer [access_token]    |
+| additional    | Parameter| vakkenDocentVoorLeerling |
+
+#### Returns
+
+```json
+{
+  "items": [
+    {
+      "$type": "medewerker.RMedewerker",
+      "links": [
+        {
+          "id": 1234,
+          "rel": "self",
+          "type": "medewerker.RMedewerker",
+          "href": "https://api.somtoday.nl/rest/v1/medewerkers/1234"
+        }
+      ],
+      "additionalObjects": {
+        "vakkenDocentVoorLeerling": {
+          "$type": "LinkableWrapper",
+          "items": [
+            {
+              "$type": "onderwijsinrichting.RVak",
+              "links": [
+                {
+                  "id": 1234,
+                  "rel": "self",
+                  "type": "onderwijsinrichting.RVak",
+                  "href": "https://api.somtoday.nl/rest/v1/vakken/1234"
+                }
+              ],
+              "afkorting": "dutl",
+              "naam": "Duitse taal en literatuur",
+              "UUID": "00000000-0000-0000-0000-000000000000"
+            },
+            ...
+          ]
+        }
+      },
+      "UUID": "00000000-0000-0000-0000-000000000000",
+      "nummer": 308382,
+      "afkorting": "vrim",
+      "achternaam": "REDACTED",
+      "geslacht": "VROUW",
+      "voorvoegsel": "de",
+      "voorletters": "M.",
+      "roepnaam": "REDACTED"
+    },
+    ...
+  ]
+}
+```
+
+</details>
+
+### Schedule: `GET /rest/v1/afspraakitems/[student-id]/jaar/[year]/week/[week]`
 <details><summary>Click to open</summary>
 
 Fetch the appointments from the schedule of the student.
@@ -240,13 +307,11 @@ Fetch the appointments from the schedule of the student.
 
 | Name          | Type      | Value                 |
 |---------------|-----------|-----------------------|
+| student_id    | URL       | [student_id]          |
+| week          | URL       | [week]                |
+| year          | URL       | [year]                |
 | Authorization | Header    | Bearer [access_token] |
-| sort          | Parameter | asc-id                |
-| additional    | Parameter | vak                   |
-| additional    | Parameter | docentAfkortingen     |
-| additional    | Parameter | leerlingen            |
-| begindatum    | Parameter | yyyy-MM-dd            |
-| einddatum     | Parameter | yyyy-MM-dd            |
+
 
 #### Returns
 
@@ -254,155 +319,173 @@ Fetch the appointments from the schedule of the student.
 {
   "items": [
     {
-      "$type": "participatie.RAfspraak",
-      "links": [
-        {
-          "id": 8849104409,
-          "rel": "self",
-          "type": "participatie.RAfspraak",
-          "href": "AFSPRAAK_URL"
-        }
+      "$type": "participatie.live.RAfspraakItem",
+      "uniqueIdentifier": "00000000000000",
+      "afspraakItemType": "ROOSTER",
+      "locatie": "c4",
+      "beginDatumTijd": "2026-09-17T09:50:00",
+      "eindDatumTijd": "2026-09-17T10:40:00",
+      "beginLesuur": 3,
+      "eindLesuur": 3,
+      "titel": "c4 - h5.fatl1 - lenm",
+      "onlineDeelname": false,
+      "omschrijving": "c4 - h5.fatl1 - lenm",
+      "vak": {
+        "$type": "participatie.live.RAfspraakVak",
+        "id": 1234,
+        "naam": "Franse taal en literatuur",
+        "afkorting": "fatl",
+        "UUID": "00000000-0000-0000-0000-000000000000"
+      },
+      "bijlagen": [],
+      "lesgroepen": [],
+      "docentNamen": [
+        "Mevr. M. REDACTED"
       ],
-      "permissions": [
-        {
-          "full": "participatie.RAfspraak:READ:INSTANCE(8849104409)",
-          "type": "participatie.RAfspraak",
-          "operations": ["READ"],
-          "instances": ["INSTANCE(8849104409)"]
-        }
+      "statusNotifications": []
+    },
+    {
+      "$type": "participatie.live.RAfspraakItem",
+      "uniqueIdentifier": "00000000000000",
+      "afspraakItemType": "ROOSTER",
+      "locatie": "d4",
+      "beginDatumTijd": "2026-09-15T11:50:00",
+      "eindDatumTijd": "2026-09-15T12:40:00",
+      "beginLesuur": 5,
+      "eindLesuur": 5,
+      "titel": "d4 - h5.econ1 - kogm",
+      "onlineDeelname": false,
+      "omschrijving": "d4 - h5.econ1 - kogm",
+      "vak": {
+        "$type": "participatie.live.RAfspraakVak",
+        "id": 1234,
+        "naam": "economie",
+        "afkorting": "econ",
+        "UUID": "00000000-0000-0000-0000-000000000000"
+      },
+      "bijlagen": [],
+      "lesgroepen": [],
+      "docentNamen": [
+        "Mevr. M. REDACTED"
       ],
-      "additionalObjects": {
-        "vak": {
-          "$type": "onderwijsinrichting.RVak",
+      "statusNotifications": []
+    },
+    {
+      "$type": "participatie.live.RAfspraakItem",
+      "uniqueIdentifier": "00000000000000",
+      "afspraakItemType": "INDIVIDUEEL",
+      "beginDatumTijd": "2026-09-15T08:00:00",
+      "eindDatumTijd": "2026-09-15T08:10:00",
+      "titel": "Lesbrief Markt & Overheid mee ipv Vragers & Aanbieders! ",
+      "onlineDeelname": false,
+      "omschrijving": "<p>Denk eraan dat je de lesbrief Markt &amp; Overheid mee neemt in plaats van Vragers &amp; Aanbieders</p>",
+      "vak": {
+        "$type": "participatie.live.RAfspraakVak",
+        "id": 1234,
+        "naam": "economie",
+        "afkorting": "econ",
+        "UUID": "00000000-0000-0000-0000-000000000000"
+      },
+      "bijlagen": [],
+      "lesgroepen": [
+        {
           "links": [
             {
-              "id": 126211284,
+              "id": 1234,
               "rel": "self",
-              "type": "onderwijsinrichting.RVak",
-              "href": "VAK_URL"
+              "type": "lesgroep.RLesgroep",
+              "href": "https://api.somtoday.nl/rest/v1/lesgroepen/1234"
             }
           ],
           "permissions": [
             {
-              "full": "onderwijsinrichting.RVak:READ:INSTANCE(126211284)",
-              "type": "onderwijsinrichting.RVak",
-              "operations": ["READ"],
-              "instances": ["INSTANCE(126211284)"]
+              "full": "lesgroep.RLesgroep:READ,UPDATE,DELETE:INSTANCE(1234)",
+              "type": "lesgroep.RLesgroep",
+              "operations": ["READ", "UPDATE", "DELETE"],
+              "instances": ["INSTANCE(1234)"]
             }
           ],
           "additionalObjects": {},
-          "afkorting": "wisB",
-          "naam": "wiskunde B"
-        },
-        "docentAfkortingen": "Stk",
-        "leerlingen": {
-          "$type": "LinkableWrapper",
-          "items": [
-            {
-              "$type": "leerling.RLeerlingPrimer",
-              "links": [
-                {
-                  "id": 546308480,
-                  "rel": "self",
-                  "type": "leerling.RLeerlingPrimer",
-                  "href": "LEERLING_URL"
-                }
-              ],
-              "permissions": [
-                {
-                  "full": "leerling.RLeerlingPrimer:READ:INSTANCE(546308480)",
-                  "type": "leerling.RLeerlingPrimer",
-                  "operations": ["READ"],
-                  "instances": ["INSTANCE(546308480)"]
-                }
-              ],
-              "additionalObjects": {},
-              "UUID": "UUID",
-              "leerlingnummer": 119371,
-              "roepnaam": "Christos",
-              "achternaam": "Karapasias"
-            }
-          ]
+          "UUID": "00000000-0000-0000-0000-000000000000",
+          "naam": "h5.econ1",
+          "omschrijving": "h5.econ1",
+          "schooljaar": {
+            "$type": "onderwijsinrichting.RSchooljaar",
+            "links": [
+              {
+                "id": 1234,
+                "rel": "self",
+                "type": "onderwijsinrichting.RSchooljaar",
+                "href": "https://api.somtoday.nl/rest/v1/schooljaren/1234"
+              }
+            ],
+            "permissions": [
+              {
+                "full": "onderwijsinrichting.RSchooljaar:READ,UPDATE,DELETE:INSTANCE(1234)",
+                "type": "onderwijsinrichting.RSchooljaar",
+                "operations": ["READ", "UPDATE", "DELETE"],
+                "instances": ["INSTANCE(1234)"]
+              }
+            ],
+            "additionalObjects": {},
+            "naam": "2026/2027",
+            "vanafDatum": "2026-08-01",
+            "totDatum": "2027-07-31",
+            "isHuidig": true
+          },
+          "vak": {
+            "links": [
+              {
+                "id": 1234,
+                "rel": "self",
+                "type": "onderwijsinrichting.RVak",
+                "href": "https://api.somtoday.nl/rest/v1/vakken/1234"
+              }
+            ],
+            "permissions": [
+              {
+                "full": "onderwijsinrichting.RVak:READ,UPDATE,DELETE:INSTANCE(1234)",
+                "type": "onderwijsinrichting.RVak",
+                "operations": ["READ", "UPDATE", "DELETE"],
+                "instances": ["INSTANCE(1234)"]
+              }
+            ],
+            "additionalObjects": {},
+            "afkorting": "econ",
+            "naam": "economie",
+            "UUID": "00000000-0000-0000-0000-000000000000"
+          },
+          "heeftStamgroep": false,
+          "examendossierOndersteund": true,
+          "vestiging": {
+            "links": [
+              {
+                "id": 1234,
+                "rel": "self",
+                "type": "instelling.RVestiging",
+                "href": "https://api.somtoday.nl/rest/v1/vestigingen/1234"
+              }
+            ],
+            "permissions": [
+              {
+                "full": "instelling.RVestiging:READ,UPDATE,DELETE:INSTANCE(1234)",
+                "type": "instelling.RVestiging",
+                "operations": ["READ", "UPDATE", "DELETE"],
+                "instances": ["INSTANCE(1234)"]
+              }
+            ],
+            "additionalObjects": {},
+            "naam": "REDACTED",
+            "afkorting": "REDACTED",
+            "UUID": "00000000-0000-0000-0000-000000000000",
+            "uuid": "00000000-0000-0000-0000-000000000000"
+          }
         }
-      },
-      "afspraakType": {
-        "links": [
-          {
-            "id": 144662674,
-            "rel": "self",
-            "type": "participatie.RAfspraakType",
-            "href": "AFSPRAAK_TYPE_URL"
-          }
-        ],
-        "permissions": [
-          {
-            "full": "participatie.RAfspraakType:READ:INSTANCE(144662674)",
-            "type": "participatie.RAfspraakType",
-            "operations": ["READ"],
-            "instances": ["INSTANCE(144662674)"]
-          }
-        ],
-        "additionalObjects": {},
-        "naam": "Les",
-        "omschrijving": "Les",
-        "standaardKleur": -2394583,
-        "categorie": "Rooster",
-        "activiteit": "Verplicht",
-        "percentageIIVO": 0,
-        "presentieRegistratieDefault": true,
-        "actief": true,
-        "vestiging": {
-          "$type": "instelling.RVestiging",
-          "links": [
-            {
-              "id": 126208855,
-              "rel": "self",
-              "type": "instelling.RVestiging",
-              "href": "VESTIGING_URL"
-            }
-          ],
-          "permissions": [
-            {
-              "full": "instelling.RVestiging:READ:INSTANCE(126208855)",
-              "type": "instelling.RVestiging",
-              "operations": ["READ"],
-              "instances": ["INSTANCE(126208855)"]
-            }
-          ],
-          "additionalObjects": {},
-          "naam": "Fortes Lyceum"
-        }
-      },
-      "locatie": "217",
-      "beginDatumTijd": "2020-05-04T11:15:00.000+02:00",
-      "eindDatumTijd": "2020-05-04T12:00:00.000+02:00",
-      "beginLesuur": 4,
-      "eindLesuur": 4,
-      "titel": "217 - A5wisB_2 - Stk",
-      "omschrijving": "217 - A5wisB_2 - Stk",
-      "presentieRegistratieVerplicht": true,
-      "presentieRegistratieVerwerkt": false,
-      "afspraakStatus": "ACTIEF",
-      "vestiging": {
-        "links": [
-          {
-            "id": 126208855,
-            "rel": "self",
-            "type": "instelling.RVestiging",
-            "href": "VESTIGING_URL"
-          }
-        ],
-        "permissions": [
-          {
-            "full": "instelling.RVestiging:READ:INSTANCE(126208855)",
-            "type": "instelling.RVestiging",
-            "operations": ["READ"],
-            "instances": ["INSTANCE(126208855)"]
-          }
-        ],
-        "additionalObjects": {},
-        "naam": "SCHOOL_NAAM"
-      }
+      ],
+      "docentNamen": [
+        "Mevr. M. REDACTED"
+      ],
+      "statusNotifications": []
     }
   ]
 }
@@ -411,7 +494,8 @@ Fetch the appointments from the schedule of the student.
 #### Example
 
 ```bash
-curl "$school_url/rest/v1/afspraken?sort=asc-id&additional=vak&additional=docentAfkortingen&additional=leerlingen&begindatum=2020-05-01&einddatum=2020-05-19" -H "Authorization: Bearer $token" -H "Accept: application/json"
+token='<REDACTED>' student_id=1234 year=2026 week=37
+curl "https://api.somtoday.nl/rest/v1/afspraakitems/$student_id/jaar/$year/week/$week" -H "Authorization: Bearer $token" -H "Accept: application/json"
 ```
 
 </details>
@@ -1854,7 +1938,6 @@ NONE
 
 ### Undocumented:
 
-- `GET /rest/v1/medewerkers/ontvangers`
 - `GET /rest/v1/maatregeltoekenningen`
 - `GET /rest/v1/leerlingadresseringen`
 - `GET /rest/v1/verzorgers/`
