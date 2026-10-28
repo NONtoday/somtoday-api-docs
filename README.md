@@ -29,8 +29,8 @@ In case you have any questions about the docs or want to chat with other, you ca
   - [Fetching information](#fetching-information)
     - [Current student(s): `GET /rest/v1/leerlingen`](#current-students-get-restv1leerlingen)
     - [Student by ID: `GET /rest/v1/leerlingen/[id]`](#student-by-id-get-restv1leerlingenid)
-    - [Get caregivers (only works on caregiver accounts) `GET /rest/v1/verzorgers`](#get-caregivers-only-works-on-caregiver-accounts-get-restv1verzorgers)
-    - [Get message recipients: `GET /rest/v1/medewerkers/ontvangers`](#get-message-recipients-get-restv1medewerkersontvangers)
+    - [Caregivers (only works on caregiver accounts) `GET /rest/v1/verzorgers`](#caregivers-only-works-on-caregiver-accounts-get-restv1verzorgers)
+    - [Message recipients: `GET /rest/v1/medewerkers/ontvangers`](#message-recipients-get-restv1medewerkersontvangers)
     - [Schedule: `GET /rest/v1/afspraakitems/[student-id]/jaar/[year]/week/[week]`](#schedule-get-restv1afspraakitemsstudent-idjaaryearweekweek)
     - [Absence Reports: `GET /rest/v1/absentiemeldingen`](#absence-reports-get-restv1absentiemeldingen)
     - [Study Guides: `GET /rest/v1/studiewijzers`](#study-guides-get-restv1studiewijzers)
@@ -39,6 +39,7 @@ In case you have any questions about the docs or want to chat with other, you ca
     - [School Years: `GET /rest/v1/schooljaren`](#schooljaren-get-restv1schooljaren--get-restv1schooljarenid)
     - [Vakkeuzes: `GET /rest/v1/vakkeuzes`](#vakkeuzes-get-restv1vakkeuzes)
     - [Waarnemingen: `GET /rest/v1/waarnemingen`](#waarnemingen-get-restv1waarnemingen)
+    - [Maatregelen `GET /rest/v1/maatregeltoekenningen`](#maatregelen-get-restv1maatregeltoekenningen)
     - [Messages: `GET /rest/v1/boodschappen/conversaties`](#messages-get-restv1boodschappenconversaties)
     - [Schoolgegevens: `GET /rest/v1/leerlingen/[id]/schoolgegevens`](#schoolgegevens-get-restv1idschoolgegevens)
     - [Vakanties: `GET /rest/v1/vakanties/leerling/[id]`](#vakanties-get-restv1vakantiesleerlingid)
@@ -241,7 +242,7 @@ curl "$school_url/rest/v1/leerlingen/$id" -H "Authorization: Bearer $token" -H "
 
 </details>
 
-### Get caregivers (only works on caregiver accounts) `GET /rest/v1/verzorgers`
+### Caregivers (only works on caregiver accounts) `GET /rest/v1/verzorgers`
 <details><summary>Click to open</summary>
 
 #### Parameters
@@ -308,7 +309,7 @@ curl "$school_url/rest/v1/leerlingen/$id" -H "Authorization: Bearer $token" -H "
 
 </details>
 
-### Get message recipients: `GET /rest/v1/medewerkers/ontvangers`
+### Message recipients: `GET /rest/v1/medewerkers/ontvangers`
 <details><summary>Click to open</summary>
 
 #### Parameters
@@ -1428,6 +1429,221 @@ You can either provide a date range or a single date. If you provide a single da
 ```
 </details>
 
+### Maatregelen `GET /rest/v1/maatregeltoekenningen`
+<details><summary>Click to open</summary>
+Fetches maatregelen
+
+#### Parameters
+
+| Name          | Type      | Value                  |
+|---------------|-----------|------------------------|
+| Authorization | Header    | Bearer [access_token]  |
+
+#### Returns
+
+```json
+{
+  "items": [
+    {
+      "$type": "participatie.RMaatregelToekenning",
+      "links": [
+        {
+          "id": 1234567890123,
+          "rel": "self",
+          "type": "participatie.RMaatregelToekenning",
+          "href": "https://api.somtoday.nl/rest/v1/maatregeltoekenningen/1234567890123"
+        }
+      ],
+      "permissions": [
+        {
+          "full": "participatie.RMaatregelToekenning:READ:INSTANCE(1234567890123)",
+          "type": "participatie.RMaatregelToekenning",
+          "operations": [
+            "READ"
+          ],
+          "instances": [
+            "INSTANCE(1234567890123)"
+          ]
+        }
+      ],
+      "additionalObjects": {},
+      "maatregelDatum": "2026-05-21T23:59:59",
+      "nagekomen": false,
+      "automatischToegekend": true,
+      "leerling": {
+        "links": [
+          {
+            "id": 1234567890123,
+            "rel": "self",
+            "type": "leerling.RLeerlingPrimer",
+            "href": "https://api.somtoday.nl/rest/v1/leerlingen/1234567890123"
+          }
+        ],
+        "permissions": [
+          {
+            "full": "leerling.RLeerlingPrimer:READ:INSTANCE(1234567890123)",
+            "type": "leerling.RLeerlingPrimer",
+            "operations": [
+              "READ"
+            ],
+            "instances": [
+              "INSTANCE(1234567890123)"
+            ]
+          }
+        ],
+        "additionalObjects": {},
+        "UUID": "00000000-0000-0000-0000-000000000000",
+        "leerlingnummer": 402638,
+        "roepnaam": "Lenn",
+        "achternaam": "Steenbergen",
+        "pasfotoUrl": "https://api.somtoday.nl/rest/v1/pasfoto/0792a6e2-9833-45e8-b1eb-1498cf22f10d/123445AB6789CDEF123445AB6789CDEF"
+      },
+      "maatregel": {
+        "$type": "participatie.RMaatregel",
+        "links": [
+          {
+            "id": 1234567890123,
+            "rel": "self",
+            "type": "participatie.RMaatregel",
+            "href": "https://api.somtoday.nl/rest/v1/maatregelen/1234567890123"
+          }
+        ],
+        "permissions": [],
+        "additionalObjects": {},
+        "omschrijving": "MAZL melding 4e keer in 12 weken"
+      },
+      "eigenaarMedewerker": {
+        "links": [
+          {
+            "id": 1234567890123,
+            "rel": "self",
+            "type": "medewerker.RMedewerkerPrimer",
+            "href": "https://api.somtoday.nl/rest/v1/medewerkers/1234567890123"
+          }
+        ],
+        "permissions": [],
+        "additionalObjects": {},
+        "UUID": "00000000-0000-0000-0000-000000000000",
+        "nummer": 308387,
+        "afkorting": "mers",
+        "achternaam": "REDACTED",
+        "geslacht": "VROUW",
+        "voorletters": "R.",
+        "roepnaam": "REDACTED"
+      },
+      "veroorzaaktDoor": {
+        "links": [
+          {
+            "id": 1234567890123,
+            "rel": "self",
+            "type": "participatie.RAbsentieMelding",
+            "href": "https://api.somtoday.nl/rest/v1/waarnemingen/1234567890123"
+          }
+        ],
+        "permissions": [
+          {
+            "full": "participatie.RAbsentieMeldingPrimer:READ:INSTANCE(1234567890123)",
+            "type": "participatie.RAbsentieMeldingPrimer",
+            "operations": [
+              "READ"
+            ],
+            "instances": [
+              "INSTANCE(1234567890123)"
+            ]
+          }
+        ],
+        "additionalObjects": {},
+        "leerling": {
+          "links": [
+            {
+              "id": 1234567890123,
+              "rel": "self",
+              "type": "leerling.RLeerlingPrimer",
+              "href": "https://api.somtoday.nl/rest/v1/leerlingen/1234567890123"
+            }
+          ],
+          "permissions": [
+            {
+              "full": "leerling.RLeerlingPrimer:READ:INSTANCE(1234567890123)",
+              "type": "leerling.RLeerlingPrimer",
+              "operations": [
+                "READ"
+              ],
+              "instances": [
+                "INSTANCE(1234567890123)"
+              ]
+            }
+          ],
+          "additionalObjects": {},
+          "UUID": "00000000-0000-0000-0000-000000000000",
+          "leerlingnummer": 402638,
+          "roepnaam": "Lenn",
+          "achternaam": "Steenbergen",
+          "pasfotoUrl": "https://api.somtoday.nl/rest/v1/pasfoto/0792a6e2-9833-45e8-b1eb-1498cf22f10d/123445AB6789CDEF123445AB6789CDEF"
+        },
+        "absentieReden": {
+          "links": [
+            {
+              "id": 1234567890123,
+              "rel": "self",
+              "type": "participatie.RAbsentieRedenPrimer",
+              "href": "https://api.somtoday.nl/rest/v1/absentieredenen/1234567890123"
+            }
+          ],
+          "permissions": [],
+          "additionalObjects": {},
+          "absentieSoort": "Absent",
+          "afkorting": "Z1",
+          "omschrijving": "Eerste ziekmelding",
+          "geoorloofd": true,
+          "kiesbaarDoorVerzorger": false,
+          "verzorgerMagTijdstipKiezen": false,
+          "verzorgerEinddatumVerplicht": false,
+          "standaardAfgehandeld": true,
+          "vestiging": {
+            "links": [
+              {
+                "id": 1234567890123,
+                "rel": "self",
+                "type": "instelling.RVestiging",
+                "href": "https://api.somtoday.nl/rest/v1/vestigingen/1234567890123"
+              }
+            ],
+            "permissions": [
+              {
+                "full": "instelling.RVestiging:READ:INSTANCE(1234567890123)",
+                "type": "instelling.RVestiging",
+                "operations": [
+                  "READ"
+                ],
+                "instances": [
+                  "INSTANCE(1234567890123)"
+                ]
+              }
+            ],
+            "additionalObjects": {},
+            "naam": "REDACTED",
+            "afkorting": "REDACTED",
+            "UUID": "00000000-0000-0000-0000-000000000000",
+            "uuid": "00000000-0000-0000-0000-000000000000"
+          }
+        },
+        "datumTijdInvoer": "2026-05-21T13:05:04.000+02:00",
+        "beginDatumTijd": "2026-05-21T13:10:00.000+02:00",
+        "eindDatumTijd": "2026-05-21T15:55:00.000+02:00",
+        "beginLesuur": 6,
+        "eindLesuur": 8,
+        "afgehandeld": true,
+        "opmerkingen": "REDACTED"
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+
 ### Messages: `GET /rest/v1/boodschappen/conversaties`
 <details><summary>Click to open</summary>
 Fetches your SomToday messages/berichten.
@@ -2042,7 +2258,7 @@ NONE
 
 ### Undocumented:
 
-- `GET /rest/v1/maatregeltoekenningen`
+- Sending/reacting to messages
 - `GET /rest/v1/leerlingadresseringen`
 - `GET /rest/v1/onderwijsopafstandperiodes/`
 - `GET /rest/v1/edurouteportaluserproduct/[id]`
