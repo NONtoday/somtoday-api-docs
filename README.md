@@ -29,6 +29,7 @@ In case you have any questions about the docs or want to chat with other, you ca
   - [Fetching information](#fetching-information)
     - [Current student(s): `GET /rest/v1/leerlingen`](#current-students-get-restv1leerlingen)
     - [Student by ID: `GET /rest/v1/leerlingen/[id]`](#student-by-id-get-restv1leerlingenid)
+    - [Get caregivers (only works on caregiver accounts) `GET /rest/v1/verzorgers`](#get-caregivers-only-works-on-caregiver-accounts-get-restv1verzorgers)
     - [Get message recipients: `GET /rest/v1/medewerkers/ontvangers`](#get-message-recipients-get-restv1medewerkersontvangers)
     - [Schedule: `GET /rest/v1/afspraakitems/[student-id]/jaar/[year]/week/[week]`](#schedule-get-restv1afspraakitemsstudent-idjaaryearweekweek)
     - [Absence Reports: `GET /rest/v1/absentiemeldingen`](#absence-reports-get-restv1absentiemeldingen)
@@ -236,6 +237,73 @@ curl "$school_url/rest/v1/leerlingen" -H "Authorization: Bearer $token" -H "Acce
 ```bash
 token='<REDACTED>' id=1234
 curl "$school_url/rest/v1/leerlingen/$id" -H "Authorization: Bearer $token" -H "Accept: application/json"
+```
+
+</details>
+
+### Get caregivers (only works on caregiver accounts) `GET /rest/v1/verzorgers`
+<details><summary>Click to open</summary>
+
+#### Parameters
+
+| Name          | Type     | Value                    |
+|---------------|----------|--------------------------|
+| Authorization | Header   | Bearer [access_token]    |
+
+#### Returns
+```json
+{
+  "items": [
+    {
+      "$type": "verzorger.RVerzorger",
+      "links": [
+        {
+          "id": 1234567890123,
+          "rel": "self",
+          "type": "verzorger.RVerzorger",
+          "href": "https://api.somtoday.nl/rest/v1/verzorgers/1234567890123"
+        }
+      ],
+      "permissions": [
+        {
+          "full": "verzorger.RVerzorger:READ:INSTANCE(1234567890123)",
+          "type": "verzorger.RVerzorger",
+          "operations": [
+            "READ"
+          ],
+          "instances": [
+            "INSTANCE(1234567890123)"
+          ]
+        }
+      ],
+      "additionalObjects": {},
+      "voorletters": "J.",
+      "achternaam": "Modaal",
+      "mobielNummer": "06-12345678",
+      "email": "yourcaregiver@gmail.com",
+      "adres": {
+        "$type": "adres.RAdres",
+        "links": [
+          {
+            "id": 1234567890123,
+            "rel": "koppeling",
+            "type": "adres.RAdres"
+          }
+        ],
+        "permissions": [],
+        "additionalObjects": {},
+        "straat": "Voorbeeldstraat",
+        "huisnummer": "99",
+        "plaatsnaam": "LUILEKKERLAND",
+        "postcode": "1234AB",
+        "telefoonnummer": "020-1234567",
+        "isBuitenlandsAdres": false,
+        "land": "Nederland"
+      },
+      "geslacht": "MAN"
+    }
+  ]
+}
 ```
 
 </details>
@@ -1976,7 +2044,6 @@ NONE
 
 - `GET /rest/v1/maatregeltoekenningen`
 - `GET /rest/v1/leerlingadresseringen`
-- `GET /rest/v1/verzorgers/`
 - `GET /rest/v1/onderwijsopafstandperiodes/`
 - `GET /rest/v1/edurouteportaluserproduct/[id]`
 - `GET /rest/v1/methodeinformatie/[id]`
