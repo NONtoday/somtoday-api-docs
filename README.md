@@ -54,6 +54,11 @@ In case you have any questions about the docs or want to chat with other, you ca
     - [3. Homework from weeks: `GET /rest/v1/studiewijzeritemweektoekenningen`](Homework.md#3-homework-from-weeks-get-restv1studiewijzeritemweektoekenningen)<br><br>
     - [1. Homework Made `PUT /rest/v1/swigemaakt/[id]`](Homework.md#1-homework-made-put-restv1swigemaaktid)
     - [2. Homework Made `PUT /rest/v1/swigemaakt/cou`](Homework.md#2-homework-made-put-restv1swigemaaktcou)
+  - [Self-planning](Self-planning.md)
+    - [Make appointment `POST /rest/v1/zelfplannen/afspraken`](Self-planning.md#make-appointment-post-restv1zelfplannenafspraken)
+    - [Get appointments `GET /rest/v1/zelfplannen/afspraken?vanafDatumtijd=[ISO-8601-time]&totEnMetDatumtijd=[ISO-8601-time2]`](Self-planning.md#get-appointments-get-restv1zelfplannenafsprakenvanafdatumtijdiso-8601-timetotenmetdatumtijdiso-8601-time2)
+    - [Make task `POST /rest/v1/zelfplannen/taken`](Self-planning.md#make-task-post-restv1zelfplantaken)
+    - [Get tasks `GET /rest/v1/zelfplannen/taken?vanafDatum=[startdate]&totEnMetDatum=[enddate]`](Self-planning.md#get-tasks-get-restv1zelfplantakenvanafdatumstartdatetotenmetdatumenddate)
   - [Studiemateriaal](Studiemateriaal.md)
     - [General study materials: `GET /rest/v1/studiemateriaal/algemeen/[student_id]`](Studiemateriaal.md#general-study-materials-get-restv1studiemateriaalalgemeenstudent_id)
     - [Fetch subjects that have study material: `GET /rest/v1/vakken/studiemateriaal/[student_id]`](Studiemateriaal.md#fetch-subjects-that-have-study-material-get-restv1vakkenstudiemateriaalstudent_id)
